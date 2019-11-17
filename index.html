@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Flappy Bird VR Experience</title>
     <script src="https://aframe.io/releases/0.9.2/aframe.min.js"></script>
+    <script src="button.js"></script>
     <script src="pipe.js"></script>
     <script src="player.js"></script>
     <script src="track.js"></script>
@@ -25,7 +26,7 @@
       <a-sky material="fog:false;" src="#skyTexture" repeat="5"></a-sky>
       <a-plane src="#groundTexture" material="flatShading:true;" shadow="cast:false; receive:true;" roughness="1" height="300" width="300" position="0 -8 0" rotation="-90 0 0" repeat="30 30"></a-plane>
       
-      <a-entity track="pipes: 10; radius:50; speed:0.1;"></a-entity>
+      <a-entity track="pipes:10; radius:50; speed:0.1; jump:0.1; gravity:-0.003;"></a-entity>
       
       <!--
       <a-entity>

@@ -1,6 +1,6 @@
 AFRAME.registerComponent("player", {
-
-  init: function() {
+  
+  init: function() {    
     let camera = document.createElement("a-entity");
     camera.setAttribute("camera", "");
     camera.setAttribute("look-controls", "");
