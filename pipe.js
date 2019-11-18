@@ -1,6 +1,12 @@
 const FLOOR_HEIGHT = -8;
+const SPACE_BETWEEN = 3;
+const DEFAULT_HEIGHT = 8;
 
 AFRAME.registerComponent("pipe", {
+  
+  schema: {
+    height: {type: 'int', default: DEFAULT_HEIGHT}, // of the bottom pipe
+  },
   
   init: function() {
     
@@ -35,7 +41,7 @@ AFRAME.registerComponent("pipe", {
     tCyl1.setAttribute("color", "#85bc48");
     tCyl2.setAttribute("color", "#7cae44");
     
-    const BOT_HEIGHT = 8;
+    const BOT_HEIGHT = this.data.height;
     bCyl1.setAttribute("height", BOT_HEIGHT);
     bCyl2.setAttribute("height", 1);
     bBox1.setAttribute("position", {y:FLOOR_HEIGHT+0.1});
@@ -47,7 +53,7 @@ AFRAME.registerComponent("pipe", {
     bBox1.setAttribute("depth", 0.2);
     bBox2.setAttribute("depth", 0.2);
     
-    const TOP_HEIGHT = 8;
+    const TOP_HEIGHT = 16 - this.data.height;
     tCyl1.setAttribute("height", TOP_HEIGHT);
     tCyl2.setAttribute("height", 1);
     tBox1.setAttribute("position", {y:FLOOR_HEIGHT+0.1});
@@ -96,7 +102,7 @@ AFRAME.registerComponent("pipe", {
     tCyl2.setAttribute("open-ended", true);
     
     top.setAttribute("rotation", {x:-180, y:-180, z:0});
-    top.setAttribute("position", {x:0, y:3, z:0});
+    top.setAttribute("position", {x:0, y:SPACE_BETWEEN, z:0});
     
     bot.appendChild(bBox1);
     bot.appendChild(bBox2);
