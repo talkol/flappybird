@@ -1,11 +1,11 @@
 const FLOOR_HEIGHT = -8;
-const SPACE_BETWEEN = 3;
 const DEFAULT_HEIGHT = 8;
 
 AFRAME.registerComponent("pipe", {
   
   schema: {
     height: {type: 'int', default: DEFAULT_HEIGHT}, // of the bottom pipe
+    gap: {type: 'number', default: 3}
   },
   
   init: function() {
@@ -102,7 +102,7 @@ AFRAME.registerComponent("pipe", {
     tCyl2.setAttribute("open-ended", true);
     
     top.setAttribute("rotation", {x:-180, y:-180, z:0});
-    top.setAttribute("position", {x:0, y:SPACE_BETWEEN, z:0});
+    top.setAttribute("position", {x:0, y:this.data.gap, z:0});
     
     bot.appendChild(bBox1);
     bot.appendChild(bBox2);

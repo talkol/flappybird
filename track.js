@@ -5,7 +5,8 @@ AFRAME.registerComponent("track", {
     radius: {type: 'number', default: 50},
     speed: {type: 'number', default: 0.1},
     jump: {type: 'number', default: 0.1},
-    gravity: {type: 'number', default: -0.003}
+    gravity: {type: 'number', default: -0.003},
+    gap: {type: 'number', default: 3}
   },
 
   degreesToPosition: function(degrees) {
@@ -24,8 +25,12 @@ AFRAME.registerComponent("track", {
     for (let i=0; i<this.data.pipes; i++) {
       let degrees = 360/this.data.pipes*i;
       let height = 8; // of the bottom pipe
+      if (i > 0) {
+        if (i % 2 == 0) height = Math.floor((Math.random() * 7) + 2); // rand from 2 to 8
+        else height = Math.floor((Math.random() * 8) + 8); // rand from 8 to 15
+      }
       let pipe = document.createElement("a-entity");
-      pipe.setAttribute("pipe", {height});
+      pipe.setAttribute("pipe", {height, gap: this.data.gap});
       pipe.setAttribute("position", this.degreesToPosition(degrees));
       this.el.appendChild(pipe);
       this.pipes[i] = {degrees, height};
@@ -119,7 +124,7 @@ AFRAME.registerComponent("track", {
     }
     
     if (this.playerDegrees > this.pipes[this.nextPipe].degrees + 2) {
-      if (cameraPosition.y < SPACE_BETWEEN + DEFAULT_HEIGHT) this.scoreCurrent++;
+      if (cameraPosition.y < this.data.gap + DEFAULT_HEIGHT) this.scoreCurrent++;
       this.nextPipe++;
       if (this.nextPipe >= this.pipes.length) {
         this.nextPipe = 0;
@@ -129,8 +134,8 @@ AFRAME.registerComponent("track", {
     }
     
     if (this.playerDegrees > this.pipes[this.nextPipe].degrees - 2) {
-      if (cameraPosition.y > SPACE_BETWEEN + DEFAULT_HEIGHT) return false;
-      if (cameraPosition.y > FLOOR_HEIGHT + this.pipes[this.nextPipe].height + SPACE_BETWEEN) return true;
+      if (cameraPosition.y > this.data.gap + DEFAULT_HEIGHT) return false;
+      if (cameraPosition.y > FLOOR_HEIGHT + this.pipes[this.nextPipe].height + this.data.gap) return true;
       if (cameraPosition.y > FLOOR_HEIGHT + this.pipes[this.nextPipe].height) return false;
       return true;
     }
