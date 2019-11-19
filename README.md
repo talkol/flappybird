@@ -1,6 +1,6 @@
 # Flappy Bird VR Experience
 
-*Work in progress!*
+<img src="https://thumbs.gfycat.com/FoolishCircularIsabellinewheatear-size_restricted.gif">
 
 Virtual Reality experience based on WebVR, works best with a VR headset like Oculus Quest.
 
