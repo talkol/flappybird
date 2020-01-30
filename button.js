@@ -10,7 +10,9 @@ AFRAME.registerComponent("button", {
     });
 
     window.addEventListener("click", function (evt) {
-      el.emit("click", evt, true);
+      if (evt.target != el) {
+        el.emit("click", evt, true);
+      }
     });
     
     let right = document.createElement("a-entity");
