@@ -8,6 +8,12 @@ AFRAME.registerComponent("button", {
         el.emit("click", evt, true);  
       }
     });
+
+    window.addEventListener("click", function (evt) {
+      if (evt.target != el) {
+        el.emit("click", evt, true);
+      }
+    });
     
     let right = document.createElement("a-entity");
     right.setAttribute("vive-controls", "hand:right; model:false;");
