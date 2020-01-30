@@ -17,6 +17,10 @@ AFRAME.registerComponent("button", {
     right.addEventListener("triggerdown", function (evt) {
       el.emit("click", evt, true);  
     });
+    right.addEventListener("bbuttondown", function (evt) {
+      let scene = document.querySelector('a-scene');
+      scene.exitVR();
+    });
     this.el.appendChild(right);
     
     let left = document.createElement("a-entity");
