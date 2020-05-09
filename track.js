@@ -1,5 +1,5 @@
 AFRAME.registerComponent("track", {
-  
+
   schema: {
     pipes: {type: 'int', default: 10},
     radius: {type: 'number', default: 50},
@@ -15,11 +15,11 @@ AFRAME.registerComponent("track", {
     let x = -1 * Math.sin(radians) * this.data.radius;
     return {x, y:0, z};
   },
-  
+
   degreesToPlayerRotation: function(degrees) {
     return {y: 90-degrees}
   },
-  
+
   init: function() {
     this.pipes = [];
     for (let i=0; i<this.data.pipes; i++) {
@@ -35,15 +35,15 @@ AFRAME.registerComponent("track", {
       this.el.appendChild(pipe);
       this.pipes[i] = {degrees, height};
     }
-    
+
     this.scoreCurrent = 0;
     this.scoreBest = 0;
-    
+
     this.player = document.createElement("a-entity");
     this.player.setAttribute("player", "");
     this.el.appendChild(this.player);
     this.setState("reset");
-    
+
     this.dialog = document.createElement("a-entity");
     this.dialog.setAttribute("dialog", "");
     let position = this.degreesToPosition(this.playerDegrees);
@@ -54,7 +54,7 @@ AFRAME.registerComponent("track", {
     this.dialog.setAttribute("rotation", this.degreesToPlayerRotation(this.playerDegrees));
     this.dialog.setAttribute("scale", {x:5, y:5, z:5});
     this.el.appendChild(this.dialog);
-    
+
     let button = document.createElement("a-entity");
     button.setAttribute("button", "");
     this.el.appendChild(button);
@@ -63,7 +63,7 @@ AFRAME.registerComponent("track", {
       self.clicked(evt);
     });
   },
-  
+
   setState: function (state) {
     this.state = state;
     if (state == "stopped") {
@@ -83,48 +83,55 @@ AFRAME.registerComponent("track", {
       this.scoreCurrent = 0;
     }
   },
-  
+
   clicked: function (evt) {
     if (this.state == "stopped") {
+      audioPlayer.components['sound__menu'].playSound();
       this.setState("reset");
     } else if (this.state == "reset") {
+      audioPlayer.components['sound__menu'].playSound();
       this.setState("flying");
     } else {
-      this.playerVerticalSpeed = this.data.jump; 
+      audioPlayer.components['sound__flap'].playSound();
+      this.playerVerticalSpeed = this.data.jump;
     }
   },
-  
+
   tick: function (time) {
     if (this.state == "stopped") return;
     if (this.state == "reset") return;
     if (this.collides()) {
+      audioPlayer.components['sound__hit'].playSound();
       this.setState("stopped");
       return;
     }
-    
+
     this.playerVerticalSpeed += this.data.gravity;
     this.player.object3D.position.y += this.playerVerticalSpeed;
-    
+
     this.playerDegrees += this.data.speed;
-    
+
     let position = this.degreesToPosition(this.playerDegrees);
     this.player.object3D.position.x = position.x;
     this.player.object3D.position.z = position.z;
-    
+
     let rotation = this.degreesToPlayerRotation(this.playerDegrees);
     this.player.object3D.rotation.y = THREE.Math.degToRad(rotation.y);
   },
-  
+
   collides: function () {
     let cameraPosition = new THREE.Vector3();
     this.player.components.player.camera.object3D.getWorldPosition(cameraPosition);
-    
+
     if (this.player.object3D.position.y < FLOOR_HEIGHT) {
       return true;
     }
-    
+
     if (this.playerDegrees > this.pipes[this.nextPipe].degrees + 2) {
-      if (cameraPosition.y < this.data.gap + DEFAULT_HEIGHT) this.scoreCurrent++;
+      if (cameraPosition.y < this.data.gap + DEFAULT_HEIGHT){
+        this.scoreCurrent++;
+        audioPlayer.components['sound__score'].playSound();
+      }
       this.nextPipe++;
       if (this.nextPipe >= this.pipes.length) {
         this.nextPipe = 0;
@@ -132,15 +139,15 @@ AFRAME.registerComponent("track", {
       }
       return false;
     }
-    
+
     if (this.playerDegrees > this.pipes[this.nextPipe].degrees - 2) {
       if (cameraPosition.y > this.data.gap + DEFAULT_HEIGHT) return false;
       if (cameraPosition.y > FLOOR_HEIGHT + this.pipes[this.nextPipe].height + this.data.gap) return true;
       if (cameraPosition.y > FLOOR_HEIGHT + this.pipes[this.nextPipe].height) return false;
       return true;
     }
-    
+
     return false;
   },
-  
+
 });
